@@ -97,7 +97,7 @@
 
         default_layer {
             bindings = <
-&kp Q             &kp W         &kp E             &kp R           &kp T                                                   &kp Y        &kp U  &lt 4 I    &kp O    &lt 4 P
+&mt ESCAPE Q      &kp W         &kp E             &kp R           &kp T                                                   &kp Y        &kp U  &lt 4 I    &kp O    &lt 4 P
 &kp A             &kp S         &kp D             &kp F           &kp G        &kp C_MUTE                &kp EQUAL        &kp H        &kp J  &kp K      &kp L    &kp MINUS
 &mt LEFT_SHIFT Z  &kp X         &kp C             &kp V           &kp B        &mt LC(UP_ARROW) TAB      &parenthesis     &kp N        &kp M  &kp COMMA  &kp DOT  &mt RIGHT_SHIFT SLASH
 &mt LCTRL LC(Y)   &kp LEFT_ALT  &kp LEFT_COMMAND  &lt 1 CAPSLOCK  &lt 2 SPACE  &lt 3 BACKSPACE           &lt 4 BACKSPACE  &lt 1 ENTER                             &mt LA(UP_ARROW) DEL
