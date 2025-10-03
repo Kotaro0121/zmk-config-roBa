@@ -73,7 +73,7 @@
         new_macro: new_macro {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&kp LANG1 &kp LBRC &kp RBRC &kp LEFT_ARROW>;
+            bindings = <&kp LS(N9) &kp LS(N0) &kp LEFT_ARROW>;
             label = "NEW_MACRO";
         };
     };
