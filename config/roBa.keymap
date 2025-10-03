@@ -66,14 +66,14 @@
         parenthesis: parenthesis {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&kp LANG1 &kp LEFT_PARENTHESIS &kp RIGHT_PARENTHESIS &kp LEFT_ARROW>;
+            bindings = <&kp LANG1 &kp LEFT_PARENTHESIS &kp RIGHT_PARENTHESIS &kp ENTER &kp LEFT_ARROW>;
             label = "parenthesis";
         };
 
         new_macro: new_macro {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&kp LANG1 &kp LBKT &kp RIGHT_BRACKET &kp LEFT_ARROW>;
+            bindings = <&kp LANG1 &kp LBKT &kp RIGHT_BRACKET &kp ENTER &kp LEFT_ARROW>;
             label = "NEW_MACRO";
         };
 
