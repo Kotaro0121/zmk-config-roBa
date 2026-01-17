@@ -1,3 +1,4 @@
+// config/roBa.keymap
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
@@ -66,7 +67,6 @@
                 <&macro_param_1to1 &mkp MACRO_PLACEHOLDER>,
                 <&macro_tap>,
                 <&sl 4>;
-
             label = "MKP_EXIT_AML";
         };
 
@@ -84,7 +84,6 @@
             label = "ENCODER_MSC_DOWN_UP";
             #sensor-binding-cells = <0>;
             bindings = <&msc SCRL_DOWN>, <&msc SCRL_UP>;
-
             tap-ms = <20>;
         };
 
@@ -92,7 +91,6 @@
             label = "MT_TAB_BSPC";
             #binding-cells = <0>;
             bindings = <&kp TAB>, <&kp BSPC>;
-
             max-taps = <2>;
             max-tap-interrupt-ms = <250>;
         };
@@ -109,7 +107,8 @@
 &mt LCTRL LC(UP_ARROW)  &mt LEFT_ALT LC(Y)  &mt LEFT_COMMAND LC(UP_ARROW)  &lt 1 ENTER  &lt 2 SPACE  &lt 3 DEL              &kp BACKSPACE  &lt 1 ENTER                             &kp DEL
             >;
 
-            sensor-bindings = <&scroll_up_down>;
+            /* ここを修正：未定義の scroll_up_down ではなく定義済みの encoder_msc_down_up を参照 */
+            sensor-bindings = <&encoder_msc_down_up>;
         };
 
         SYMBOLS {
