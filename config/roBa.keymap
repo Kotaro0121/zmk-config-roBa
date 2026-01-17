@@ -103,9 +103,7 @@
 &mt LCTRL LC(UP_ARROW)  &mt LEFT_ALT LC(Y)  &mt LEFT_COMMAND LC(UP_ARROW)  &lt 1 ENTER  &lt 2 SPACE  &lt 3 DEL              &kp BACKSPACE  &lt 1 ENTER                             &kp DEL
             >;
 
-            /* 定義済みのセンサー回転挙動を参照 */
-
-            sensor-bindings = <&encoder_msc_down_up>;
+            sensor-bindings = <&scroll_up_down>;
         };
 
         SYMBOLS {
@@ -134,7 +132,7 @@
 &trans            &trans            &trans          &trans           &trans     &trans      &trans  &trans                                                                               &trans
             >;
 
-            sensor-bindings = <&inc_dec_kp LC(PAGE_UP) LC(PAGE_DOWN)>;
+           sensor-bindings = <&inc_dec_kp LC(PAGE_UP) LC(PAGE_DOWN)>;
         };
 
         MOUSE {
