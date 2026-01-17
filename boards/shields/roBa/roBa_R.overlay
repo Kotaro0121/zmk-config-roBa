@@ -21,7 +21,7 @@
         device = <&trackball>;
 
         input-processors = 
-            /* 移動速度を1.5倍に設定（<分子 分母> で指定） */
+            /* 移動速度を1.5倍に設定（<分子 分母>） */
             <&zip_xy_scaler 3 2>, 
             /* スクロール速度を2倍に設定 */
             <&zip_scroll_scaler 2 1>;
@@ -64,7 +64,7 @@
         spi-max-frequency = <2000000>;
         irq-gpios = <&gpio0 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
         
-        /* センサー自体の解像度設定 (デフォルト: 600, 最大 3200) */
+        /* センサー自体の解像度 (400, 800, 1000, 1200, 1600, 2000, 2400, 3200) */
         cpi = <1000>; 
         
         automouse-layer = <4>;
