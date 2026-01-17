@@ -17,7 +17,7 @@
 };
 
 / {
-    /* --- ここに不足していた定義を追加しました --- */
+    /* --- ここに不足していた速度調整の定義を追加しました --- */
     zip_xy_scaler: zip_xy_scaler {
         compatible = "zmk,input-processor-scaler";
         #input-processor-cells = <2>;
@@ -37,7 +37,7 @@
         device = <&trackball>;
         input-processors = <&zip_xy_scaler 3 2>, <&zip_scroll_scaler 2 1>;
     };
-    /* ------------------------------------------ */
+    /* -------------------------------------------------- */
 };
 
 &pinctrl {
