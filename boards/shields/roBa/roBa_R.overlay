@@ -1,3 +1,5 @@
+#include <dt-bindings/zmk/pointing.h>
+#include <zephyr/dt-bindings/input/input-event-codes.h>
 #include "roBa.dtsi"
 
 &default_transform {
@@ -15,17 +17,27 @@
 };
 
 / {
-    /* トラックボールの挙動（感度・速度）を設定 */
+    /* --- ここに不足していた定義を追加しました --- */
+    zip_xy_scaler: zip_xy_scaler {
+        compatible = "zmk,input-processor-scaler";
+        #input-processor-cells = <2>;
+        type = <INPUT_EV_REL>;
+        codes = <INPUT_REL_X INPUT_REL_Y>;
+    };
+
+    zip_scroll_scaler: zip_scroll_scaler {
+        compatible = "zmk,input-processor-scaler";
+        #input-processor-cells = <2>;
+        type = <INPUT_EV_REL>;
+        codes = <INPUT_REL_WHEEL INPUT_REL_HWHEEL>;
+    };
+
     trackball_listener {
         compatible = "zmk,input-listener";
         device = <&trackball>;
-
-        input-processors = 
-            /* 移動速度を1.5倍に設定（<分子 分母>） */
-            <&zip_xy_scaler 3 2>, 
-            /* スクロール速度を2倍に設定 */
-            <&zip_scroll_scaler 2 1>;
+        input-processors = <&zip_xy_scaler 3 2>, <&zip_scroll_scaler 2 1>;
     };
+    /* ------------------------------------------ */
 };
 
 &pinctrl {
@@ -63,10 +75,7 @@
         reg = <0>;
         spi-max-frequency = <2000000>;
         irq-gpios = <&gpio0 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-        
-        /* センサー自体の解像度 (400, 800, 1000, 1200, 1600, 2000, 2400, 3200) */
         cpi = <1000>; 
-        
         automouse-layer = <4>;
         scroll-layers = <5>;
     };
