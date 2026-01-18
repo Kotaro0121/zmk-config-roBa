@@ -17,7 +17,6 @@
 };
 
 / {
-    /* --- ここに不足していた速度調整の定義を追加しました --- */
     zip_xy_scaler: zip_xy_scaler {
         compatible = "zmk,input-processor-scaler";
         #input-processor-cells = <2>;
@@ -35,9 +34,9 @@
     trackball_listener {
         compatible = "zmk,input-listener";
         device = <&trackball>;
-        input-processors = <&zip_xy_scaler 3 2>, <&zip_scroll_scaler 2 1>;
+        /* 速度を 3/2 (1.5倍) から 1/1 (等倍) に落としました */
+        input-processors = <&zip_xy_scaler 1 1>, <&zip_scroll_scaler 1 1>;
     };
-    /* -------------------------------------------------- */
 };
 
 &pinctrl {
