@@ -1,45 +1,73 @@
-// 1. インクルード (ファイルの最上部)
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
 
-// 2. 定義
 #define ZMK_MOUSE_DEFAULT_SCRL_VAL 100
 #define MOUSE 4
 #define SCROLL 5
 #define NUM 6
 
-// 3. ルートノードの開始
+&mt {
+    flavor = "hold-preferred";
+    quick-tap-ms = <0>;
+};
+
+&sl { release-after-ms = <250>; };
+
 / {
-    /* --- ここに zip_xy_acceleration などを入れる --- */
+    /* --- エラー解消のための加速設定の定義 --- */
     zip_xy_acceleration: zip_xy_acceleration {
         compatible = "zmk,input-processor-acceleration";
         #input-processor-cells = <2>;
-        strategy = <0>; // 0 = LINEAR
+        strategy = <0>; // 0 = LINEAR (等速・安定)
+        /* 「もっと鈍感に」するための設定: 1, 1 にすると加速が無効化されます */
         acceleration-multiplier = <1>; 
         exponent = <1>; 
     };
 
-    /* --- 既存の combos --- */
+    /* トラックボールの入力処理を定義 (roBa_R.overlay等の設定と連携) */
+    trackball_listener {
+        compatible = "zmk,input-listener";
+        device = <&vtrackball>; // roBaの標準的なデバイス名
+        input-processors = <&zip_xy_acceleration 1 1>;
+    };
+
     combos {
         compatible = "zmk,combos";
-        // ... 内容 ...
+
+        BT0 {
+            bindings = <&bt BT_SEL 0>;
+            key-positions = <28>;
+        };
+
+        BT1 {
+            bindings = <&bt BT_SEL 1>;
+            key-positions = <28 23>;
+        };
+
+        BT2 {
+            bindings = <&bt BT_SEL 2>;
+            key-positions = <28 24>;
+        };
+
+        BT3 {
+            bindings = <&none>;
+            key-positions = <28 25>;
+        };
     };
 
-    /* --- 既存の macros --- */
     macros {
-        // ... 内容 ...
-    };
+        to_layer_0: to_layer_0 {
+            compatible = "zmk,behavior-macro-one-param";
+            #binding-cells = <1>;
+            bindings = <&to 0 &macro_param_1to1 &kp MACRO_PLACEHOLDER>;
+            label = "TO_LAYER_0";
+        };
 
-    /* --- 既存の behaviors --- */
-    behaviors {
-        // ... 内容 ...
-    };
-
-    /* --- 既存の keymap --- */
-    keymap {
-        compatible = "zmk,keymap";
-        // ... 各レイヤーの内容 ...
-    };
-}; // ← 最後に必ずこのセミコロン付きの閉じカッコが必要です
+        mkp_exit_AML: mkp_exit_AML {
+            compatible = "zmk,behavior-macro-one-param";
+            #binding-cells = <1>;
+            bindings =
+                <&macro_press>,
+                <&macro_param_1to1 &mkp MACRO
