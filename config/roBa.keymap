@@ -13,7 +13,23 @@
 };
 
 &sl { release-after-ms = <250>; };
+/ {
+    /* マウス加速の設定を定義 */
+    zip_xy_acceleration: zip_xy_acceleration {
+        compatible = "zmk,input-processor-acceleration";
+        #input-processor-cells = <2>;
+        strategy = <瞬発力重視なら「STEP」か「LINEAR」>; 
+        /* 以下の数値を調整することで「鈍感」にできます */
+        acceleration-multiplier = <1>; // 基本速度
+        exponent = <1>;                // 加速の強さ（1は加速なし、大きいほど速くなる）
+    };
 
+    /* トラックボールのリスナー設定（これが必要な場合があります） */
+    trackball_listener {
+        compatible = "zmk,input-listener";
+        device = <&vtrackball>; // roBaのセンサーデバイス名に合わせてください
+        input-processors = <&zip_xy_acceleration 1 1>;
+    };
 / {
     combos {
         compatible = "zmk,combos";
