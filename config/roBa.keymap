@@ -32,7 +32,7 @@
 
     trackball_listener {
         compatible = "zmk,input-listener";
-        device = <&vtrackball>; // roBaの標準的なデバイス名
+        device = <&trackball>; // roBaの標準的なデバイス名
         input-processors = <&zip_xy_acceleration 1 1>;
     };
 
