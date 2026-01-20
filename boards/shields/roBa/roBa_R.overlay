@@ -17,7 +17,7 @@
 };
 
 / {
-    /* ベース速度：等倍 */
+    /* インプットプロセッサを最小限に整理 */
     zip_xy_scaler: zip_xy_scaler {
         compatible = "zmk,input-processor-scaler";
         #input-processor-cells = <2>;
@@ -25,30 +25,11 @@
         codes = <INPUT_REL_X INPUT_REL_Y>;
     };
 
-    /* 加速設定：低速時は鈍感に、高速時は加速 */
-    zip_xy_acceleration: zip_xy_acceleration {
-        compatible = "zmk,input-processor-acceleration";
-        #input-processor-cells = <2>;
-        type = <INPUT_EV_REL>;
-        codes = <INPUT_REL_X INPUT_REL_Y>;
-        temp-otg;
-    };
-
-    zip_scroll_scaler: zip_scroll_scaler {
-        compatible = "zmk,input-processor-scaler";
-        #input-processor-cells = <2>;
-        type = <INPUT_EV_REL>;
-        codes = <INPUT_REL_WHEEL INPUT_REL_HWHEEL>;
-    };
-
     trackball_listener {
         compatible = "zmk,input-listener";
         device = <&trackball>;
-        /* スケーラーの後に加速を適用します */
-        input-processors = 
-            <&zip_xy_scaler 1 1>, 
-            <&zip_xy_acceleration 2 5>, 
-            <&zip_scroll_scaler 1 1>;
+        /* 加速（acceleration）を削除し、スケーラーのみを適用して「鈍感」に固定します */
+        input-processors = <&zip_xy_scaler 1 1>;
     };
 };
 
