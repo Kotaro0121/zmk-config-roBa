@@ -8,10 +8,9 @@
 #define SCROLL 5
 #define NUM 6
 
-&mt {
-    flavor = "hold-preferred";
-    quick-tap-ms = <0>;
-};
+/* 【変更1】&mt の上書き（hold-preferred / quick-tap-ms=0）は削除。
+   理由：文字キーのモッドタップ（Z・SLASH・TAB・NUM層KP0）を全廃したため
+   &mt の使用箇所がなくなる。TAB を &mt LG(O) TAB に戻す場合はこの上書きも復活させること。 */
 
 &sl { release-after-ms = <250>; };
 
@@ -32,6 +31,46 @@
         BT2 {
             bindings = <&bt BT_SEL 2>;
             key-positions = <28 24>;
+        };
+
+        /* 【変更2】打鍵効率用のコンボを追加（すべて第0層限定。
+           BT系コンボとは位置が重ならないことを確認済み。
+           ローマ字入力では子音の後に必ず母音が挟まるため、
+           これらの同時押しが通常打鍵のロールで誤発することは構造的にない） */
+
+        combo_tab: combo_tab {
+            bindings = <&kp TAB>;
+            key-positions = <11 12>; /* S + D（旧設定で使っていたコンボの復活） */
+            layers = <0>;
+            timeout-ms = <50>;
+        };
+
+        combo_stab: combo_stab {
+            bindings = <&kp LS(TAB)>;
+            key-positions = <12 13>; /* D + F（旧設定の復活） */
+            layers = <0>;
+            timeout-ms = <50>;
+        };
+
+        combo_esc: combo_esc {
+            bindings = <&kp ESCAPE>;
+            key-positions = <14 17>; /* G + H（両手内側ホームポジション） */
+            layers = <0>;
+            timeout-ms = <50>;
+        };
+
+        combo_kagi: combo_kagi {
+            bindings = <&kagi>;
+            key-positions = <18 19>; /* J + K → 「」 */
+            layers = <0>;
+            timeout-ms = <50>;
+        };
+
+        combo_nijukagi: combo_nijukagi {
+            bindings = <&nijukagi>;
+            key-positions = <19 20>; /* K + L → 『』 */
+            layers = <0>;
+            timeout-ms = <50>;
         };
     };
 
@@ -63,6 +102,25 @@
             #binding-cells = <0>;
             bindings = <&kp LANG_HANJA &kp LEFT_PARENTHESIS &kp RIGHT_PARENTHESIS &kp LEFT_ARROW>;
             label = "parenthesis";
+        };
+
+        /* 【変更3】日本語括弧ペアのマクロを parenthesis と同じ型で追加。
+           LANG_HANGEUL = かな（LANGUAGE_1）、LANG_HANJA = 英数（LANGUAGE_2）として
+           macOS が JIS 配列として認識している前提（既存の MOUSE 層・parenthesis の運用と同じ）。
+           かな入力中に [ ] は「」、{ } は『』になる（macOS 日本語IMEの標準動作）ことを利用する。 */
+
+        kagi: kagi {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp LANG_HANGEUL &kp LEFT_BRACKET &kp RIGHT_BRACKET &kp LEFT_ARROW>;
+            label = "KAGI";
+        };
+
+        nijukagi: nijukagi {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp LANG_HANGEUL &kp LEFT_BRACE &kp RIGHT_BRACE &kp LEFT_ARROW>;
+            label = "NIJUKAGI";
         };
 
         /* 追加：スクロール制御マクロ */
@@ -102,27 +160,60 @@
         flavor = "balanced";
         hold-while-undecided; /* ボールを動かした瞬間にHold判定（ズーム開始） */
         };
+
+        /* 【変更4】文字キー（I・P）専用の zp 派生。
+           require-prior-idle-ms = 直前の打鍵から150ms以内はホールド判定をせず
+           タップ（文字）として確定させる。打鍵の流れの中で I・P に指が残って
+           ズーム（Cmd保持＋SCROLL層）が誤発するのを防ぐ。
+           親指の Ctrl（位置35）は従来どおり &zp のまま（意図的な操作が前提の位置のため）。
+           戻し方：default_layer の &zp_key を &zp に戻すだけ。 */
+
+        zp_key: zoom_tap_key {
+        compatible = "zmk,behavior-hold-tap";
+        label = "Zoom / Tap (letters)";
+        #binding-cells = <2>;
+        bindings = <&sc>, <&kp>;
+        tapping-term-ms = <200>;
+        flavor = "balanced";
+        hold-while-undecided;
+        require-prior-idle-ms = <150>;
+        };
     };
 
     keymap {
         compatible = "zmk,keymap";
 
+        /* 【変更9】括弧マクロ &parenthesis の移設（2026-11-18 本人の追加指示）。
+           default 層の位置28は BT0 コンボ（key-positions <28> 単独・層制限なし）が
+           押下を先に消費するため、そこの binding はどの層でも到達不能だった。
+           位置28の binding は &none とし、このキーの機能は BT0 コンボ側にあることを
+           明示する（BT0/BT1/BT2 の発火条件は従来どおり不変）。
+           &parenthesis は NUM 層の位置17（右手ホーム行・人差し指）へ移設し、
+           数字入力中にそのまま括弧が打てるようにする。マクロ定義自体は無変更。 */
+
         default_layer {
             bindings = <
-&kp Q             &kp W               &kp E             &kp R        &kp T                                          &kp Y        &kp U  &zp 0 I    &kp O    &zp 0 P
-&kp A             &kp S               &kp D             &kp F        &kp G        &none              &kp EQUAL      &kp H        &kp J  &kp K      &kp L    &kp MINUS
-&mt LEFT_SHIFT Z  &kp X               &kp C             &kp V        &kp B        &mt LG(O) TAB      &parenthesis   &kp N        &kp M  &kp COMMA  &kp DOT  &mt RIGHT_SHIFT SLASH
-&kp LEFT_CONTROL  &zp 0 LEFT_CONTROL  &kp LEFT_COMMAND  &lt 1 ENTER  &lt 2 SPACE  &lt 3 DEL          &kp BACKSPACE  &lt 1 ENTER                             &kp DEL
+&kp Q             &kp W               &kp E             &kp R        &kp T                                          &kp Y        &kp U  &zp_key 0 I  &kp O    &zp_key 0 P
+&kp A             &kp S               &kp D             &kp F        &kp G        &kp LEFT_SHIFT     &kp EQUAL      &kp H        &kp J  &kp K      &kp L    &kp MINUS
+&kp Z             &kp X               &kp C             &kp V        &kp B        &kp TAB            &none          &kp N        &kp M  &kp COMMA  &kp DOT  &kp SLASH
+&kp LEFT_CONTROL  &zp 0 LEFT_CONTROL  &kp LEFT_COMMAND  &lt 1 ENTER  &lt 2 SPACE  &lt 3 DEL          &kp BACKSPACE  &lt 1 ENTER                             &kp RIGHT_SHIFT
             >;
 
             sensor-bindings = <&scroll_up_down>;
         };
 
+        /* 【変更10】括弧類の集約（2026-11-18 本人の追加指示）。
+           通常の括弧キーは SYMBOLS 層でひとまとまりにそろえる：右手ホーム行
+           （位置16〜21）を ( ) [ ] { } の3ペア集約とする。押し出された SEMICOLON は
+           集約で空いた上段の位置5へ移設。上段に複製されていた ( )（位置3・4・6）は
+           &trans とする（左手側は位置14・15の [ ] が対向手用として残る）。
+           自動入力マクロ &parenthesis は NUM 層（変更9）という振り分け。 */
+
         SYMBOLS {
             bindings = <
-&kp ESCAPE  &kp AMPERSAND    &kp ASTERISK  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS                      &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS  &trans         &trans             &trans
-&kp TILDE   &kp DOLLAR       &kp PERCENT   &kp CARET             &trans                 &trans      &trans  &kp LEFT_BRACE        &kp RIGHT_BRACE        &kp SEMICOLON  &kp SINGLE_QUOTE   &kp BACKSLASH
-&kp GRAVE   &kp EXCLAMATION  &kp AT_SIGN   &kp HASH              &trans                 &trans      &trans  &kp LEFT_BRACKET      &kp RIGHT_BRACKET      &kp COLON      &kp DOUBLE_QUOTES  &kp PIPE
+&kp ESCAPE  &kp AMPERSAND    &kp ASTERISK  &trans  &trans                      &kp SEMICOLON  &trans  &trans         &trans             &trans
+&kp TILDE   &kp DOLLAR       &kp PERCENT   &kp CARET             &kp LEFT_BRACKET       &kp RIGHT_BRACKET  &kp LEFT_PARENTHESIS  &kp RIGHT_PARENTHESIS   &kp LEFT_BRACKET      &kp RIGHT_BRACKET  &kp LEFT_BRACE   &kp RIGHT_BRACE
+&kp GRAVE   &kp EXCLAMATION  &kp AT_SIGN   &kp HASH              &trans                 &trans      &trans  &kp SINGLE_QUOTE      &kp DOUBLE_QUOTES      &kp COLON      &kp BACKSLASH      &kp PIPE
 &trans      &trans           &trans        &trans                &trans                 &trans      &trans  &trans                                                                         &trans
             >;
         };
@@ -130,28 +221,48 @@
         NUM {
             bindings = <
 &kp MINUS                   &kp KP_NUMBER_7  &kp KP_NUMBER_8  &kp KP_NUMBER_9  &kp PLUS                                           &trans      &kp F7  &kp F8  &kp F9  &kp F10
-&kp SLASH                   &kp KP_NUMBER_4  &kp KP_NUMBER_5  &kp KP_NUMBER_6  &kp ASTERISK  &kp LC(LA(KP_NUMBER_0))      &trans  &trans      &kp F4  &kp F5  &kp F6  &kp F11
-&mt LEFT_SHIFT KP_NUMBER_0  &kp KP_NUMBER_1  &kp KP_NUMBER_2  &kp KP_NUMBER_3  &kp PERIOD    &kp EQUAL                    &trans  &kp ESCAPE  &kp F1  &kp F2  &kp F3  &kp F12
+&kp SLASH                   &kp KP_NUMBER_4  &kp KP_NUMBER_5  &kp KP_NUMBER_6  &kp ASTERISK  &kp LC(LA(KP_NUMBER_0))      &trans  &parenthesis  &kp F4  &kp F5  &kp F6  &kp F11
+&kp KP_NUMBER_0             &kp KP_NUMBER_1  &kp KP_NUMBER_2  &kp KP_NUMBER_3  &kp PERIOD    &kp EQUAL                    &trans  &kp ESCAPE  &kp F1  &kp F2  &kp F3  &kp F12
 &trans                      &trans           &trans           &trans           &trans        &trans                       &trans  &trans                              &kp F13
             >;
         };
 
+        /* 【変更11】macOS機能の割り当て追加（ARROW層の空き位置）。
+           位置15 = Ctrl+↑（Mission Control）、位置16 = Ctrl+↓（アプリケーション
+           ウィンドウ表示）はいずれも macOS の既定ショートカット。位置24 = F4
+           （Launchpad。macOS の「F1、F2などのキーを標準ファンクションキーとして
+           使用」がオフの場合に効く。環境により効かない場合は判断点として §4 に記載）。
+           スペース（デスクトップ）移動は、既存の LC(LEFT)/LC(RIGHT)（位置23・25ほか）が
+           macOS 既定の Ctrl+←/→ そのものなので新規割り当ては不要。 */
+
         ARROW {
             bindings = <
 &kp LG(LEFT_BRACKET)  &kp LC(M)       &kp UP_ARROW    &kp LC(Y)        &kp LG(RIGHT_BRACKET)                      &kp LG(LEFT_BRACKET)  &kp LC(M)           &kp UP_ARROW    &kp LG(RIGHT_BRACKET)  &kp LG(RIGHT_ARROW)
-&kp HOME              &kp LEFT_ARROW  &kp DOWN_ARROW  &kp RIGHT_ARROW  &kp END                &trans      &trans  &kp HOME              &kp LEFT_ARROW      &kp DOWN_ARROW  &kp RIGHT_ARROW        &kp END
-&kp LEFT_SHIFT        &kp LC(LEFT)    &trans          &kp LC(RIGHT)    &trans                 &trans      &trans  &trans                &kp LC(LEFT_ARROW)  &trans          &kp LC(RIGHT)          &trans
+&kp HOME              &kp LEFT_ARROW  &kp DOWN_ARROW  &kp RIGHT_ARROW  &kp END                &kp LC(UP_ARROW)      &kp LC(DOWN_ARROW)  &kp HOME              &kp LEFT_ARROW      &kp DOWN_ARROW  &kp RIGHT_ARROW        &kp END
+&kp LEFT_SHIFT        &kp LC(LEFT)    &kp F4          &kp LC(RIGHT)    &trans                 &trans      &trans  &trans                &kp LC(LEFT_ARROW)  &trans          &kp LC(RIGHT)          &trans
 &trans                &trans          &trans          &trans           &trans                 &trans      &trans  &trans                                                                           &trans
             >;
 
             sensor-bindings = <&scroll_up_down>;
         };
 
+        /* 【変更12】オートレイヤー（自動マウス層）まわりの簡素化。
+           文字キー19個の &to_layer_0 X（押すと第0層へ戻って文字を打つマクロ）を
+           通常の &kp X に置き換え、MOUSE 層に留まったまま打鍵できるようにする。
+           MOUSE 層には全文字が揃っているため打鍵自体は完結する。層の退出は
+           (1) 親指の &to_layer_0 LANG_HANJA / LANG_HANGEUL（現行どおり残置）、
+           (2) automouse のタイムアウトに委ねる。タイムアウトは変更13で
+           100000ms → 20000ms への短縮が決定・実装済み（roBa_R.conf.draft、§6.9）。
+           マウスボタンの mkp_exit_AML（クリック後に &sl 4 で層へ戻る）は現行どおり。
+           挙動の Before/After は proposal.md §6.5 に明示した。
+           【変更14】位置15に &mo 7（スナイプ層への入り口）を追加。下記 snipe_layer の
+           コメントを参照。 */
+
         MOUSE {
             bindings = <
-&to_layer_0 Q  &to_layer_0 W  &to_layer_0 E  &to_layer_0 R           &to_layer_0 T                                           &to_layer_0 Y    &to_layer_0 U      &kp LC(T)          &to_layer_0 O      &mo 5
-&to_layer_0 A  &to_layer_0 S  &to_layer_0 D  &to_layer_0 F           &to_layer_0 G  &trans                        &kp LC(V)  &kp LC(LS(TAB))  &mkp_exit_AML MB1  &mkp_exit_AML MB3  &mkp_exit_AML MB2  &kp LC(TAB)
-&to_layer_0 Z  &to_layer_0 X  &to_layer_0 C  &to_layer_0 V           &to_layer_0 B  &trans                        &kp LC(C)  &to_layer_0 N    &mkp MB4           &kp LC(W)          &mkp MB5           &trans
+&kp Q  &kp W  &kp E  &kp R           &kp T                                           &kp Y    &kp U      &kp LC(T)          &kp O      &mo 5
+&kp A  &kp S  &kp D  &kp F           &kp G  &mo 7                          &kp LC(V)  &kp LC(LS(TAB))  &mkp_exit_AML MB1  &mkp_exit_AML MB3  &mkp_exit_AML MB2  &kp LC(TAB)
+&kp Z  &kp X  &kp C  &kp V           &kp B  &trans                        &kp LC(C)  &kp N    &mkp MB4           &kp LC(W)          &mkp MB5           &trans
 &trans         &trans         &trans         &to_layer_0 LANG_HANJA  &trans         &to_layer_0 LANG_HANGEUL      &trans     &trans                                                                    &trans
             >;
         };
@@ -171,6 +282,26 @@
 &trans  &trans        &trans        &trans        &trans  &trans      &trans       &trans        &trans        &trans        &trans        &trans
 &trans  &kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &trans  &trans      &bootloader  &trans        &trans        &trans        &trans        &bt BT_CLR
 &trans  &trans        &trans        &trans        &trans  &trans      &trans       &trans                                                  &bt BT_CLR_ALL
+            >;
+        };
+
+        /* 【変更14】スナイプ（低速・精密操作）層＝レイヤー7（2026-11-18 本人の決定で実装）。
+           ドライバ（kumamuk-git zmk-pmw3610-driver）のネイティブ機能を使う:
+           roBa_R.overlay の trackball ノードに snipe-layers = <7> を指定し（overlay.draft）、
+           最高位の有効レイヤーが7の間だけセンサー CPI が CONFIG_PMW3610_SNIPE_CPI
+           （=200、roBa_R.conf.draft で明示）へ切り替わる。本層は全 &trans で、
+           キーは下層（MOUSE 層）のまま効く。トラックボールの報告値だけが低速になる。
+           入り口は MOUSE 層の位置15の &mo 7（押している間だけ有効）:
+           精密操作は MOUSE 層の滞在中に行い、その間 右手はボールを操作しているため、
+           保持は左手側でなければならない。位置15は左手ホーム行の内側キー（G の隣）で
+           &trans の空きだった。詳細と根拠は proposal.md §6.9。 */
+
+        snipe_layer {
+            bindings = <
+&trans  &trans  &trans  &trans  &trans                      &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans  &trans      &trans  &trans                              &trans
             >;
         };
     };

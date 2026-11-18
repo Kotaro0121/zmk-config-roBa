@@ -1,3 +1,12 @@
+# keymap-drawer 用の更新案（roBa.keymap.draft に対応）
+# 注意：リポジトリ内の keymap-drawer/roBa.yaml は旧世代のキーマップのまま未更新だったため、
+# 本ファイルは現行キーマップ＋設計案ドラフトの内容で全面書き直したもの。
+# 変更9（2026-11-18）：default 層の位置28は 'BT 0'（単独コンボが実質機能）とし、'()' は NUM 層の位置17へ移設。
+# 変更10（2026-11-18）：SYMBOLS 層の右手ホーム行を ( ) [ ] { } の括弧集約とし、';' は上段の位置5へ移設。
+# 変更11（2026-11-18）：ARROW 層の空き位置に macOS 機能（Mission Control / アプリケーションウィンドウ / Launchpad）を追加。
+# 変更12（2026-11-18）：MOUSE 層の文字キーを &to_layer_0 から通常キーへ簡素化（ラベルの「→L0」を除去）。
+# 変更13（2026-11-18・決定実装）：automouse タイムアウト 100000ms → 20000ms（roBa_R.conf.draft 側の変更。図には現れない）。
+# 変更14（2026-11-18・決定実装）：スナイプ層（レイヤー7・全て透過）を追加し、MOUSE 層の位置15に MO SNIPE（&mo 7）を配置。
 layout: {zmk_keyboard: roBa}
 layers:
   default:
@@ -8,121 +17,121 @@ layers:
   - T
   - Y
   - U
-  - {t: I, h: SCROLL}
+  - {t: I, h: Zoom}
   - O
-  - P
+  - {t: P, h: Zoom}
   - A
   - S
   - D
   - F
   - G
-  - Sft+Gui+S
-  - '-'
+  - LEFT SHIFT
+  - '='
   - H
   - J
   - K
   - L
-  - ''''
-  - {t: Z, h: LEFT SHIFT}
+  - '-'
+  - Z
   - X
   - C
   - V
   - B
-  - ':'
-  - ;
+  - TAB
+  - 'BT 0'
   - N
   - M
   - ','
   - .
   - /
   - LCTRL
-  - LEFT WIN
-  - LEFT ALT
-  - {t: '&to_layer_0 INT_HENKAN', h: '6'}
+  - {t: LCTRL, h: Zoom}
+  - LGUI
+  - {t: ENTER, h: SYMBOLS}
   - {t: SPACE, h: NUM}
-  - {t: '&to_layer_0 INT_MUHENKAN', h: ARROW}
+  - {t: DEL, h: ARROW}
   - BACKSPACE
-  - {t: ENTER, h: FUNCTION}
-  - DEL
-  FUNCTION:
+  - {t: ENTER, h: SYMBOLS}
+  - RIGHT SHIFT
+  SYMBOLS:
+  - ESCAPE
+  - '&'
+  - '*'
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - ;
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - F1
-  - F2
-  - F3
-  - F4
-  - F5
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - F13
-  - F6
-  - F7
-  - F8
-  - F9
-  - F10
+  - '~'
+  - $
+  - '%'
+  - ^
+  - '['
+  - ']'
+  - '('
+  - ')'
+  - '['
+  - ']'
+  - '{'
+  - '}'
+  - '`'
+  - '!'
+  - '@'
+  - '#'
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - F11
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - ''''
+  - '"'
+  - ':'
+  - \
+  - '|'
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {type: held}
-  - F12
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {type: held}
+  - {t: ▽, type: trans}
   NUM:
   - '-'
   - KP 7
   - KP 8
   - KP 9
   - +
-  - ^
-  - '&'
-  - '~'
-  - (
-  - )
+  - {t: ▽, type: trans}
+  - F7
+  - F8
+  - F9
+  - F10
   - /
   - KP 4
   - KP 5
   - KP 6
   - '*'
   - Ctl+Alt+KP 0
-  - _
-  - '!'
-  - '@'
-  - '#'
-  - $
-  - '%'
-  - {t: KP 0, h: LEFT SHIFT}
+  - {t: ▽, type: trans}
+  - '()'
+  - F4
+  - F5
+  - F6
+  - F11
+  - KP 0
   - KP 1
   - KP 2
   - KP 3
   - .
   - '='
   - {t: ▽, type: trans}
-  - '['
-  - ']'
-  - '{'
-  - '}'
-  - \
+  - ESCAPE
+  - F1
+  - F2
+  - F3
+  - F12
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -131,40 +140,40 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - '|'
+  - F13
   ARROW:
-  - ESCAPE
-  - Ctl+Sft+TAB
+  - 'Gui+['
+  - Ctl+M
   - UP ARROW
-  - Ctl+TAB
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - Ctl+Y
+  - 'Gui+]'
+  - 'Gui+['
+  - Ctl+M
+  - UP ARROW
+  - 'Gui+]'
+  - 'Gui+RIGHT ARROW'
   - HOME
   - LEFT ARROW
   - DOWN ARROW
   - RIGHT ARROW
   - END
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - 'Ctl+UP ARROW'
+  - 'Ctl+DOWN ARROW'
+  - HOME
+  - LEFT ARROW
+  - DOWN ARROW
+  - RIGHT ARROW
+  - END
   - LEFT SHIFT
-  - Gui+Sft+LEFT ARROW
-  - {t: ▽, type: trans}
-  - Gui+Sft+RIGHT ARROW
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - 'Ctl+LEFT ARROW'
+  - F4
+  - 'Ctl+RIGHT ARROW'
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
+  - 'Ctl+LEFT ARROW'
   - {t: ▽, type: trans}
+  - 'Ctl+RIGHT ARROW'
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -177,46 +186,46 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   MOUSE:
+  - 'Q'
+  - 'W'
+  - 'E'
+  - 'R'
+  - 'T'
+  - 'Y'
+  - 'U'
+  - Ctl+T
+  - 'O'
+  - MO SCROLL
+  - 'A'
+  - 'S'
+  - 'D'
+  - 'F'
+  - 'G'
+  - MO SNIPE
+  - Ctl+V
+  - Ctl+Sft+TAB
+  - MB1
+  - MB3
+  - MB2
+  - Ctl+TAB
+  - 'Z'
+  - 'X'
+  - 'C'
+  - 'V'
+  - 'B'
+  - {t: ▽, type: trans}
+  - Ctl+C
+  - 'N'
+  - MB4
+  - Ctl+W
+  - MB5
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
+  - '英数 →L0'
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - '&mkp MB1'
-  - '&mkp MB3'
-  - '&mkp MB2'
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - 'かな →L0'
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -239,7 +248,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - LCLK
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -308,14 +317,64 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - BT CLR ALL
+  SNIPE:
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
 combos:
+- p: [28]
+  k: 'BT 0'
+- p: [28, 23]
+  k: 'BT 1'
+- p: [28, 24]
+  k: 'BT 2'
 - p: [11, 12]
   k: TAB
 - p: [12, 13]
   k: Sft+TAB
-- p: [11, 10]
-  k: '&to_layer_0 INT_MUHENKAN'
-- p: [20, 21]
-  k: '"'
-- p: [24, 25]
-  k: '='
+- p: [14, 17]
+  k: ESC
+- p: [18, 19]
+  k: 「」
+- p: [19, 20]
+  k: 『』
