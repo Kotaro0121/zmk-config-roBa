@@ -1,8 +1,10 @@
 /* roBa_R.overlay の変更案ドラフト（対象: boards/shields/roBa/roBa_R.overlay）
  * リポジトリ未反映。本ファイルの内容をそのまま roBa_R.overlay に適用できる。
- * 変更点は次の1件のみ（2026-11-18 本人の決定・実装。proposal.md §6.9）:
+ * 変更点は次の2件（2026-11-18 本人の決定・実装。proposal.md §6.9・§6.3）:
  *   【変更14】trackball ノードに snipe-layers = <7> を追加
  *             （レイヤー7滞在中だけ CONFIG_PMW3610_SNIPE_CPI へ切り替わる）
+ *   【変更15】感度案 S1 の採用: zip_xy_scaler を 1 1 → 3 2 に変更
+ *             （実効感度 400 → 600 相当。スナイプとの比率 1/2 は不変）
  */
 #include <dt-bindings/zmk/pointing.h>
 #include <zephyr/dt-bindings/input/input-event-codes.h>
@@ -34,8 +36,8 @@
     trackball_listener {
         compatible = "zmk,input-listener";
         device = <&trackball>;
-        /* 加速（acceleration）を削除し、スケーラーのみを適用して「鈍感」に固定します */
-        input-processors = <&zip_xy_scaler 1 1>;
+        /* 加速（acceleration）を削除し、スケーラーのみを適用します（S1: 3/2、実効600相当） */
+        input-processors = <&zip_xy_scaler 3 2>;
     };
 };
 
